@@ -1,0 +1,89 @@
+HRMS DOCUMENTATION--------------
+
+
+
+             DESCRIPCTION
+
+
+----> HRMS{human resource managment}
+---->this is web based appliction
+---->we can built the appliction using Django
+----> with in the application we devlop the employee details.attendence,and tracking all with in our org..
+           
+
+          Devlpoment steps
+
+---->first we can take the ubuntu serverand update that[apt update -y]
+---->install the git and clone the code
+---->install the database(postgres)and enable it and start the service
+---->next we can install the python3 and check the version
+----> next install Django[pip install Django]
+             
+
+
+           Create Database
+
+----> using sudo -i -u postgres
+----> psql
+----> hear we are inside the postgresql
+----> hear we creating the database
+----> create user 
+----> next we can setup the paawd for user[ALTER USER devuser PASSWORD'Devuser#123';]
+----> next grant the permissions on HRMS to devuser
+      [GRENT ALL PRIVILEGES ON DATABASE HRMS TO devuser;]
+             CREATE DATABASE hrms;
+             CREATE USER devuser;
+             ALTER USER postgres PASSWORD 'new_password'; 
+             \l                                                                               
+
+---->  ALTER DATABASE "hrms-prod" OWNER TO devuser;(to change owner )
+
+----> GRANT ALL PRIVILEGES ON DATABASE hrms TO postgres;
+---->  \c hrms
+---->  GRANT SELECT ON ALL TABLES IN SCHEMA public TO postgres;
+
+
+         Configaration settings
+
+
+----> Go to project directory that place we have settings.py file is there
+----> we can replace the secrect kry in sequrity warining
+----> and allowed host we can menction the publicip with in the squre brackets and singelcots
+----> Infront of staticurl menction the privateip :port
+----> then we change the database details and allow origins like e-mail host,e-mail port,email user,email host user password,email port
+---->after modifing tje database settings we can connect the database
+----> next we can allow the connections in our database [cd /etc/postgres/14/main]
+----> Inside [vi postgresql.cong] listen address is there that place we include our private ip
+----> next chage the [pg_hba.conf] this file to allow thw connections from specific ips
+----> vi pg_hba.cnf [ above local host collom
+	   add  host all  all       privateip/32     md5
+	        host hrms postgres privatip/32 md5
+		in ipv4 line change ip as give ur privateip
+        in below down in replicas also replace privateip
+
+
+
+----> finally we can install the python dependences for HRMS project
+    pip install psycopg2-binary
+    pip install djangorestframework
+    pip install djangorestframework-simplejwt
+    sudo apt-get install libpq-dev python3-dev
+    pip install psycopg2
+    sudo apt install python3.10-venv
+    python3 -m venv myenv
+    source myenv/bin/activate
+    pip install -r requirements.txt
+
+
+
+
+             Database Migraction
+
+----> Apply database migrations to set up the database schema:
+     [python3 manage.py migrate]
+     [Restart the PostgreSQL service]
+     [sudo systemctl restart postgresql]
+     [sudo systemctl status postgresql]
+ 
+---->Now successfully deployed the HRMS application. we can access the application by navigating to the specified private IP address and port 8000 in a web browser.
+    [python3 manage.py runserver privateip:8000]
